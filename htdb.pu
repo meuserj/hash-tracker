@@ -1,0 +1,96 @@
+@startuml
+
+title Hash Tracker Database Structure
+
+wp_ht_hashes o-- wp_ht_locations
+wp_ht_hashes o-- wp_posts
+wp_ht_hashers o-- wp_users
+wp_ht_attendence o-- wp_ht_hashers
+wp_ht_attendence o-- wp_ht_hashes
+note right of wp_ht_attendence : type will be\nhare or hound
+note top of wp_ht_hashers : I wouldn't imagine we\nwould need more than\n5 aliases on top of the\nprimary name...
+note right of wp_users : Have an optional link to\nthe Wordpress users\ntable so that we can\nlet people have profiles
+note left of wp_ht_locations : We should be able to use\nthe Google Geocoding API\nto translate between\naddresses and coords
+note right of wp_ht_hashers : We can PROBABLY assume\nthat if hasher_name starts with\n<b>Just</b> then they are unnamed\nbut there is always a possibility
+note top of wp_posts : Similar to using <b>wp_users</b>\nwith <b>wp_ht_hashers</b>,\nthe descriptive data for\nthe hash should be\nstored in a <b>wp_posts</b> entry.
+class wp_ht_hashes {
+    -Int ID
+    +Int location_id
+    +Int post_id
+    Int hash_num
+    String hash_title
+    DateTime hash_start
+}
+
+class wp_posts {
+    -Int ID
+    +Int post_author
+    Datetme post_date
+    Datetime post_date_gmt
+    String post_content
+    String post_title
+    String post_excerpt
+    String post_status
+    String comment_status
+    String ping_status
+    String post_password
+    String post_name
+    String to_ping
+    String pinged
+    Datetime post_modified
+    Datetime post_modified_gmt
+    String post_content_filtered
+    +Int post_parent
+    String guid
+    Int menu_order
+    String post_type
+    String post_mime_type
+    Int comment_count
+}
+
+
+class wp_ht_locations {
+    -Int ID
+    String loc_name
+    String loc_address
+    String loc_city
+    String loc_state
+    String loc_zip
+    Decimal loc_lat
+    Decimal loc_long
+}
+
+class wp_ht_hashers {
+    -Int ID
+    +Int user_id
+    String hasher_nerd_first
+    String hasher_nerd_last
+    String hasher_name
+    String hasher_alias1
+    String hasher_alias2
+    String hasher_alias3
+    String hasher_alias4
+    String hasher_alias5
+    Boolean hasher_is_named
+}
+
+class wp_users {
+    -Int ID
+    String user_login
+    String user_pass
+    String user_nicename
+    String user_email
+    String user_url
+    DateTime user_registered
+    String user_activation_key
+    Int user_status
+    String display_name
+}
+
+class wp_ht_attendence {
+    +Int hash_id
+    +Int hasher_id
+    String type
+}
+
+@enduml
